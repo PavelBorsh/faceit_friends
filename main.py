@@ -1,4 +1,6 @@
 import time
+
+import psutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -35,13 +37,14 @@ def get_friends(name):
     names = [i.get_attribute('img-alt') for i in tags]
     names.remove(name)
     driver.quit()
+    close_processes()
     return names
 
 
-def similar_friends2(name1, name2):
-    friends1 = get_friends(name1)
-    friends2 = get_friends(name2)
-    return set(friends1) & set(friends2)
+def close_processes():
+    for proc in psutil.process_iter():
+        if 'chrome.exe' in str(proc) or 'chromedriver.exe' in str(proc):
+            proc.kill()
 
 
 def similar_friends(*args):
@@ -76,6 +79,3 @@ def similar_friends(*args):
         else:
             print('No similar friends found.')
         return result
-
-
-similar_friends('Toivu')
