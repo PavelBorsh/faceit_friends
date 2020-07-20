@@ -4,7 +4,6 @@ import psutil
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 
 
 def get_friends(name):
@@ -16,14 +15,10 @@ def get_friends(name):
     options.add_argument('start-maximized')
     options.add_argument('disable-infobars')
     options.add_argument("--disable-extensions")
-    driver = webdriver.Chrome(options=options, executable_path=r'D:\files\chromedriver\bin\chromedriver.exe')
+    driver = webdriver.Chrome(options=options)
     driver.get(f'https://www.faceit.com/en/players/{name}/friends')
     length = 0
     while True:
-        driver.execute_script('window.scrollTo(0,1000)')
-
-        ActionChains(driver).key_down(Keys.PAGE_DOWN)
-
         time.sleep(0.5)
         tags = driver.find_elements_by_tag_name('avatar')
         new_length = len(tags)
@@ -33,7 +28,6 @@ def get_friends(name):
         tag = driver.find_element_by_css_selector('body')
         tag.click()
         tag.send_keys(Keys.END)
-
     names = [i.get_attribute('img-alt') for i in tags]
     names.remove(name)
     driver.quit()
@@ -74,8 +68,11 @@ def similar_friends(*args):
         result = set(all_friends[0])
         for friends in all_friends:
             result = result & set(friends)
+        if len(args) == 1:
+            result.remove(*args)
         if result:
             print('\n', f'Found {len(result)} similar friends: {result}')
         else:
             print('No similar friends found.')
         return result
+
