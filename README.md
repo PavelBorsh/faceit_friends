@@ -1,7 +1,7 @@
 #### Chromedriver
 
 Tested under Windows only.
-You need to download chromedriver and include chromedriver's location in your PATH environment variable first.
+You have to download chromedriver and include chromedriver's location in your PATH environment variable first.
 
 #### Getting faceit friends
 
